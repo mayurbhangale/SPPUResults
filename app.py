@@ -12,8 +12,8 @@ from pyscheduler import schedule
 app = Flask(__name__)
 
 def send_mail(recipient, subject, message):
-    username = "mayurbhangale@live.com"
-    password = "feelfoul92702689"
+    username = "YOUR_EMAILID"
+    password = "YOUR_PASSWORD"
 
     msg = MIMEMultipart()
     msg['From'] = username
@@ -23,7 +23,7 @@ def send_mail(recipient, subject, message):
 
     print('sending mail to ' + recipient + ' on ' + subject)
 
-    mailServer = smtplib.SMTP('smtp-mail.outlook.com', 587)
+    mailServer = smtplib.SMTP('YOUR_SMTP_HOST', YOUR_SMTP_PORT)
     mailServer.ehlo()
     mailServer.starttls()
     mailServer.ehlo()
@@ -38,8 +38,8 @@ def write_to_file(file, data, mode):
     write_file.close()
 
 
-# check for results every 5 minutes
-@schedule('*/1 * * * *')
+# check for results every 10 minutes
+@schedule('*/10 * * * *')
 def check():
     try:
         page = requests.get('http://results.unipune.ac.in/')
@@ -84,7 +84,6 @@ def register():
             data=email
         )
 
-
 @app.route('/', methods=['GET'])
 def demo():
     return render_template('index.html', token=session.get('access_token'))
@@ -92,4 +91,4 @@ def demo():
 
 if __name__ == "__main__":
     app.debug = os.environ.get('FLASK_DEBUG', True)
-    app.run(port=7001)
+    app.run(port=7000)
