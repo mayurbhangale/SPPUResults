@@ -1,0 +1,6 @@
+{
+  "name": "SPPU Result Notifier",
+  "logo": "http://www.unipune.ac.in/uop_files/uop_logo.jpg",
+  "repository": "https://github.com/mayurbhangale/sppunotifier",
+  "keywords": ["results", "python", "flask"],
+}
