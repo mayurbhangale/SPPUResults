@@ -1,4 +1,4 @@
-Get email notifications when results are announced on http://results.unipune.ac.in
+Get email notifications when results are announced on http://results.unipune.ac.in. Demo on https://sppunotifier.herokuapp.com/.
 
 
 How To Use This
