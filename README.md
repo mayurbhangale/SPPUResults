@@ -13,7 +13,7 @@ How To Use This
 Deploy to Heroku
 ----------------
 
-Click the button below to set up this sample app on Heroku:
+Click the button below to set up this app on Heroku:
 
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
 
