@@ -1,20 +1,19 @@
-__author__ = "Mayur Bhangale"
+#!/usr/bin/env python
 
 from lxml import html
 import requests
 import smtplib
-import schedule
-import os, time
+import os
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
-from flask import Flask, render_template, request, redirect, session
+from flask import Flask, render_template, request, session
+from pyscheduler import schedule
 
 app = Flask(__name__)
 
-
 def send_mail(recipient, subject, message):
-    username = "your email"
-    password = "your password"
+    username = "mayurbhangale@live.com"
+    password = "feelfoul92702689"
 
     msg = MIMEMultipart()
     msg['From'] = username
@@ -39,6 +38,8 @@ def write_to_file(file, data, mode):
     write_file.close()
 
 
+# check for results every 5 minutes
+@schedule('*/1 * * * *')
 def check():
     try:
         page = requests.get('http://results.unipune.ac.in/')
@@ -49,11 +50,12 @@ def check():
 
         # store latest
         local_data = open('history.txt').read()
+        lines = open('users.txt').read().splitlines()
 
         if local_data != latest:
-            send_mail('mayurbhangale96@gmail.com', 'SPPU Result Notifier', latest)
             write_to_file('history.txt', latest, 'w')
-
+            for email_id in lines:
+                send_mail(email_id, '[BOT] SPPU Results out!', 'Result for ' + latest + ' announced.')
         else:
             print("No new updates")
     except requests.exceptions.ConnectionError:
@@ -64,24 +66,30 @@ def check():
 def register():
     name = request.form['name']
     email = request.form['email']
-    phone_number = request.form['phoneNumber']
-    write_to_file('users.txt', email + '\n', 'a')  # a is for append
-    send_mail(email, "SPPU Results Notifier", "Thank you for registering " + name)
 
-    return render_template(
-        'success.html',
-        uname=name,
-        data=email
-    )
+    if email in open('users.txt').read():
+        return render_template(
+            'already.html',
+            uname=name,
+            data=email
+        )
+
+    else:
+        write_to_file('users.txt', email + '\n', 'a')  # a is for append
+        send_mail(email, "[BOT] SPPU Results Notifier", "Thank you for registering " + name)
+
+        return render_template(
+            'success.html',
+            uname=name,
+            data=email
+        )
 
 
 @app.route('/', methods=['GET'])
 def demo():
-    """Demo.html is a template that calls the other routes in this example."""
-    return render_template('hello.html', token=session.get('access_token'))
+    return render_template('index.html', token=session.get('access_token'))
 
 
 if __name__ == "__main__":
-    schedule.every(10).minutes.do(check())
     app.debug = os.environ.get('FLASK_DEBUG', True)
-    app.run(port=7000)
+    app.run(port=7001)
